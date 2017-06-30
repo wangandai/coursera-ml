@@ -152,6 +152,7 @@ fprintf('\n');
 
 % Estimate the price of a 1650 sq-ft, 3 br house
 % ====================== YOUR CODE HERE ======================
+feat = [1 1650 3];
 price = feat*theta; % You should change this
 
 
