@@ -61,29 +61,25 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+c_arr = 1:num_labels;
+X = [ones(m, 1) X];
+y = (y==c_arr);
+%forward propogation
+for i = 1:m
+	a1 = X(i, :);
+	z2 = a1*Theta1';
+	a2 = [1, sigmoid(z2)];
+	z3 = a2*Theta2';
+	h = sigmoid(z3);
+	y_i = y(i, :);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% -------------------------------------------------------------
-
-% =========================================================================
-
+	J = J + 1/m * (-y_i*log(h)' - (1-y_i)*log(1-h)');
+end
+J  = J + lambda/2/m * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2)));
+%back propogation
+for i = 1:m
+	
+end
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
