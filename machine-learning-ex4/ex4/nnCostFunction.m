@@ -61,27 +61,29 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+%Vectorize answer labels
 c_arr = 1:num_labels;
-X = [ones(m, 1) X];
 y = (y==c_arr);
-%forward propogation
-for i = 1:m
-	a1 = X(i, :);
-	z2 = a1*Theta1';
-	a2 = [1, sigmoid(z2)];
-	z3 = a2*Theta2';
-	h = sigmoid(z3);
-	y_i = y(i, :);
 
-	J = J + 1/m * (-y_i*log(h)' - (1-y_i)*log(1-h)');
-end
-J  = J + lambda/2/m * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2)));
-%back propogation
-for i = 1:m
-	
-end
-% Unroll gradients
+%Forward propagation
+A1 = [ones(m, 1) X];
+Z2 = A1*Theta1';
+A2 = [ones(size(Z2, 1),1) sigmoid(Z2)];
+Z3 = A2*Theta2';
+A3 = sigmoid(Z3);
+
+J = 1/m * sum(sum((-y.*log(A3) - (1-y).*log(1-A3))));
+R = sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2));
+J = J + lambda/2/m*R;
+
+D3 = A3 .- y;
+D2 = D3*Theta2.*sigmoidGradient([ones(size(Z2, 1), 1) Z2]);
+D2 = D2(:, 2:end);
+Delta1 = D2'*A1;
+Delta2 = D3'*A2;
+Theta1_grad = 1/m*Delta1 + lambda/m*[zeros(size(Theta1,1),1) Theta1(:, 2:end)];
+Theta2_grad = 1/m*Delta2 + lambda/m*[zeros(size(Theta2,1),1) Theta2(:, 2:end)];
+
+%Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
-
 end
